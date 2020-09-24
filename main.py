@@ -1,9 +1,9 @@
 import os 
 
 modeluse = 'default'
-path = './input/'
-png_path = './out/'
-png_out_path = './png_out/'
+path = '/home/rain/shipin/input/'
+png_path = '/home/rain/shipin/out/'
+png_out_path = '/home/rain/shipin/png_out/'
 length = len(os.listdir(path))
 num = 0
 while (num + 1 < length):
