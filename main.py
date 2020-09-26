@@ -1,6 +1,6 @@
-import os 
+import os
 
-modeluse = 'default'
+modeluse = 'kitti'
 path = '/home/rain/shipin/input/'
 png_path = '/home/rain/shipin/out/'
 png_out_path = '/home/rain/shipin/png_out/'
@@ -11,7 +11,8 @@ while (num + 1 < length):
         str(num) + '.png\t' + '--second\t' + path + \
         str(num+1) + '.png\t' + '--out\t' + png_path + str(num+1) + '.flo'
     os.system(ml)
-    kl = '~/flow-code/color_flow\t' + png_path + str(num+1) + '.flo\t' + \
+    kl = '~/pytorch-liteflownet/flow-code/color_flow\t' + png_path + \
+        str(num+1) + '.flo\t' + \
         png_out_path + str(num+1) + '.png'
     os.system(kl)
     num += 1
