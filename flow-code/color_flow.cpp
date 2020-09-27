@@ -50,7 +50,7 @@ void MotionToColor(CFloatImage motim, CByteImage &colim, float maxmotion)
     maxrad = 1;
 
     if (verbose)
-        maxrad = 10;  //  归一化系数（源代码无这行）
+        maxrad = 40;  //  归一化系数（源代码无这行）
     fprintf(stderr, "normalizing by %g\n", maxrad);
 
     for (y = 0; y < height; y++) {
