@@ -2,11 +2,11 @@ import cv2
 import os
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-path = '~shipin/png_out/'
+path = '/home/rain/shipin/png_out/'
 length = len(os.listdir(path))
 
 videoWriter = cv2.VideoWriter(
-    '~shipin/车离开光流.avi', fourcc, 10, (1280, 720))
+    '/home/rain/shipin/守刚位 有烟光流2.avi', fourcc, 10, (960, 540))
 for i in range(1, length + 1):
     img = cv2.imread(path + str(i) + '.png')
     # cv2.imshow('img', img)

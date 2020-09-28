@@ -43,14 +43,14 @@ void MotionToColor(CFloatImage motim, CByteImage &colim, float maxmotion)
 
 
     if (maxmotion > 0) // i.e., specified on commandline
-	// maxrad = maxmotion;
-    maxrad = 50;
+	   maxrad = maxmotion;
+    // maxrad = 50;
 
     if (maxrad == 0) // if flow == 0 everywhere
     maxrad = 1;
 
     if (verbose)
-        maxrad = 40;  //  归一化系数（源代码无这行）
+        maxrad = 10;  //  归一化系数（源代码无这行）
     fprintf(stderr, "normalizing by %g\n", maxrad);
 
     for (y = 0; y < height; y++) {
@@ -76,8 +76,8 @@ int main(int argc, char *argv[])
 	    argn++;
 	}
 	if (argn >= argc-3 && argn <= argc-2) {
-	    char *flowname = argv[argn++];
-	    char *outname = argv[argn++];
+	    char *flowname = argv[argn++];  //光流图名字
+	    char *outname = argv[argn++];   //输出图名字
 	    float maxmotion = argn < argc ? atof(argv[argn++]) : -1;
 	    CFloatImage im, fband;
 	    ReadFlowFile(im, flowname);
