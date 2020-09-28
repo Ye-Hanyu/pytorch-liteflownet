@@ -1,5 +1,5 @@
 import cv2
-vidcap = cv2.VideoCapture('/home/rain/shipin/守刚位 有烟.mp4')
+vidcap = cv2.VideoCapture('/home/rain/shipin/半烟.mp4')
 success, image = vidcap.read()
 count = 0
 num = 0
@@ -9,7 +9,7 @@ while success:
     success, image = vidcap.read()
     if(count % timeF == 0):
         # image = cv2.resize(image, (1280, 720), interpolation=cv2.INTER_AREA)
-        image = image[540:1080, 960:1920]  # 需要保留的区域--裁剪
+        # image = image[540:1080, 960:1920]  # 需要保留的区域--裁剪
         # 参数1 是高度的范围，参数2是宽度的范围
         cv2.imwrite("/home/rain/shipin/input/%d.png" %
                     num, image)   # save frame as JPEG file

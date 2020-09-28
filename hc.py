@@ -6,7 +6,7 @@ path = '/home/rain/shipin/png_out/'
 length = len(os.listdir(path))
 
 videoWriter = cv2.VideoWriter(
-    '/home/rain/shipin/守刚位 有烟光流2.avi', fourcc, 10, (960, 540))
+    '/home/rain/shipin/半烟fp=0.75.avi', fourcc, 10, (1920, 1080))
 for i in range(1, length + 1):
     img = cv2.imread(path + str(i) + '.png')
     # cv2.imshow('img', img)
