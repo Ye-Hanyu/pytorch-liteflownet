@@ -2,8 +2,8 @@ import cv2
 import os
 import numpy as np
 import shutil
-from flow_vis import flow_vis
-from collections import Counter
+# from flow_vis import flow_vis
+# from collections import Counter
 
 
 video_path = '/home/rain/shipin/'
@@ -11,23 +11,23 @@ modeluse = 'kitti'  # 使用的训练模型
 cut_path = '/home/rain/shipin/input/'  # 截取帧的位置
 flo_path = '/home/rain/shipin/out/'  # 光流文件存储位置
 png_out_path = '/home/rain/shipin/png_out/'  # 光流输出图片存储位置
-length = 0
-mpthreshold = 15000
+length = 0  # 图像数量
+mpthreshold = 10000  # 运动像素点阈值
 
 
 # 提取视频帧
 def videocut(video_path, cut_path):
-    vidcap = cv2.VideoCapture(video_path + '油烟机.mp4')  # 所提取视频名字
+    vidcap = cv2.VideoCapture(video_path + '中途放烟.mp4')  # 所提取视频名字
     success, image = vidcap.read()
     count = 0
     num = 0
-    timeF = 3  # 截取间隔
+    timeF = 5  # 截取间隔
     # success = True
     while success:
         success, image = vidcap.read()
         if(count % timeF == 0):
             if image is not None:  # 跳过某些视频最后一帧读取错误
-                image = cv2.resize(image, (960, 540), interpolation=cv2.INTER_AREA)
+                image = cv2.resize(image, (720, 480), interpolation=cv2.INTER_AREA)
                 # image = image[140:680, 200:1160]  # 需要保留的区域--裁剪
                 # 参数1 是高度的范围，参数2是宽度的范围
                 cv2.imwrite(cut_path + "/%d.png" %
@@ -46,7 +46,6 @@ def flocalc(modeluse, cut_path, flo_path):
             + cut_path + str(num) + '.png\t' + '--second\t' + cut_path + \
             str(num+1) + '.png\t' + '--out\t' + flo_path + str(num+1) + '.flo'
         os.system(ml)  # 命令行运行光流图计算
-        
         kl = '~/pytorch-liteflownet/flow-code/color_flow\t' + flo_path + \
             str(num+1) + '.flo\t' + \
             png_out_path + str(num+1) + '.png'
@@ -66,7 +65,7 @@ def flocalc(modeluse, cut_path, flo_path):
 def videomake(video_path, cut_path, png_out_path):
     fourcc = cv2.VideoWriter_fourcc(*'XVID')  # 合成视频编码
     videoWriter = cv2.VideoWriter(
-        video_path + '/油烟1.avi', fourcc, 10, (960, 540))
+        video_path + '/中途放烟1.avi', fourcc, 6, (720, 480))
     # 合成视频名称，编码，FPS，宽高
     for i in range(1, length):
         img1 = cv2.imread(cut_path + str(i) + '.png')                                                                                                                                                                 
@@ -78,17 +77,18 @@ def videomake(video_path, cut_path, png_out_path):
         # 合并，其中参数1表示透明度，第一个1表示img1不透明，第二个1表示img2不透明
         img_mix = cv2.addWeighted(img1, 1, img2, 0.7, 0)
 
-        mp[i-1] = sum(sum(mask == 0))
+        mp[i-1] = sum(sum(mask == 0))  # 计算图像中运动的像素点数量
         print(mp[i-1])
         count = 0
-        if (i > 4):
-            for j in range(0, 4):
-                if (mp[i-1-j] > mpthreshold):
+        if (i > 9):  # 检测连续图像中运动像素点数量是否大于阈值
+            for j in range(0, 9):
+                if (mp[i-1-j] > mpthreshold):  # 判断阈值
                     count += 1
-            if (count >= 4):
-                cv2.putText(img_mix, 'Fire!', (100, 100),
+            if (count >= 8):  # 判断大于阈值的图像数量
+                cv2.putText(img_mix, 'Smoke!', (100, 100),
                             cv2.FONT_HERSHEY_COMPLEX, 2.0, (100, 200, 200), 5)
-                print('fire')
+        # 在图像中加字
+                print('Smoke')
             else:
                 cv2.putText(img_mix, 'Safe!', (100, 100),
                             cv2.FONT_HERSHEY_COMPLEX, 2.0, (100, 200, 200), 5)
@@ -109,16 +109,16 @@ def videomake(video_path, cut_path, png_out_path):
 
 if __name__ == '__main__':
     # 清空文件夹
-    # shutil.rmtree(cut_path)
-    # os.mkdir(cut_path)
-    # shutil.rmtree(flo_path)
-    # os.mkdir(flo_path)
-    # shutil.rmtree(png_out_path)
-    # os.mkdir(png_out_path)
+    shutil.rmtree(cut_path)
+    os.mkdir(cut_path)
+    shutil.rmtree(flo_path)
+    os.mkdir(flo_path)
+    shutil.rmtree(png_out_path)
+    os.mkdir(png_out_path)
     # 代码运行开始
-    # videocut(video_path, cut_path)
+    videocut(video_path, cut_path)
     length = len(os.listdir(cut_path))
     mp = [0]*length
-    # flocalc(modeluse, cut_path, flo_path)
+    flocalc(modeluse, cut_path, flo_path)
     videomake(video_path, cut_path, png_out_path)
 # end

@@ -50,7 +50,7 @@ void MotionToColor(CFloatImage motim, CByteImage &colim, float maxmotion)
     maxrad = 1;
 
     if (verbose)
-        maxrad = 2;  //  归一化系数（源代码无这行）
+        maxrad = 20;  //  归一化系数（源代码无这行）
     fprintf(stderr, "normalizing by %g\n", maxrad); 
 
     float fp = 0.75;  //  删除移动低于fp的值
