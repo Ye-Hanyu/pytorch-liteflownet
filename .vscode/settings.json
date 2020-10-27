@@ -1,3 +1,23 @@
 {
-    "python.pythonPath": "/home/rain/anaconda3/envs/ptlfn/bin/python"
+    "python.pythonPath": "/home/rain/anaconda3/envs/ptlfn/bin/python",
+    "cSpell.ignoreWords": [
+        "color",
+        "cv",
+        "cvt",
+        "d",
+        "g",
+        "gray",
+        "i",
+        "img",
+        "img g cv cvt color rgb gray imwrite png out path d i ms sum print mp",
+        "imwrite",
+        "mp",
+        "ms",
+        "out",
+        "path",
+        "png",
+        "print",
+        "rgb",
+        "sum"
+    ]
 }

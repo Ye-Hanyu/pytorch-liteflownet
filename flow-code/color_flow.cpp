@@ -50,28 +50,36 @@ void MotionToColor(CFloatImage motim, CByteImage &colim, float maxmotion)
     maxrad = 1;
 
     if (verbose)
-        maxrad = 4;  //  归一化系数（源代码无这行）
+        maxrad = 2;  //  归一化系数（源代码无这行）
     fprintf(stderr, "normalizing by %g\n", maxrad); 
 
     float fp = 0.75;  //  删除移动低于fp的值
+    float sum = 0;
 
-    for (y = 0; y < height; y++) {
-	for (x = 0; x < width; x++) {
-	    float fx = motim.Pixel(x, y, 0);
-	    float fy = motim.Pixel(x, y, 1);
-        float rad = sqrt(fx * fx + fy * fy);
-        uchar *pix = &colim.Pixel(x, y, 0);
-	    if (unknown_flow(fx, fy)) {
-		pix[0] = pix[1] = pix[2] = 0;
-	    }
-        else if (rad < fp) {
-        computeColor(0 / maxrad, 0 / maxrad, pix);  //  过滤低于fp的运动
+    for (y = 0; y < height; y++)
+    {
+        for (x = 0; x < width; x++)
+        {
+            float fx = motim.Pixel(x, y, 0);
+            float fy = motim.Pixel(x, y, 1);
+            float rad = sqrt(fx * fx + fy * fy);
+            sum += rad;
+            uchar *pix = &colim.Pixel(x, y, 0);
+            if (unknown_flow(fx, fy))
+            {
+                pix[0] = pix[1] = pix[2] = 0;
+            }
+            else if (rad < fp)
+            {
+                computeColor(0 / maxrad, 0 / maxrad, pix); //  过滤低于fp的运动
+            }
+            else
+            {
+                computeColor(fx / maxrad, fy / maxrad, pix);
+            }
         }
-        else {
-		computeColor(fx/maxrad, fy/maxrad, pix);
-	    }
-	}
     }
+    printf("sum: %.4f\n", sum);
 }
 
 int main(int argc, char *argv[])
