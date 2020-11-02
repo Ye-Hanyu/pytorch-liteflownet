@@ -19,11 +19,11 @@ mpthreshold = 20000  # 运动像素点阈值
 
 # 提取视频帧
 def videocut(video_path, cut_path):
-    vidcap = cv2.VideoCapture(video_path + 'MVI_2653.MP4')  # 所提取视频名字
+    vidcap = cv2.VideoCapture(video_path + '厨房测试.mp4')  # 所提取视频名字
     success, image = vidcap.read()
     count = 0
     num = 0
-    timeF = 5  # 截取间隔
+    timeF = 6  # 截取间隔
     # success = True
     while success:
         success, image = vidcap.read()
@@ -76,8 +76,9 @@ def flo2png():
 def videomake(video_path, cut_path, png_out_path):
     fourcc = cv2.VideoWriter_fourcc(*'XVID')  # 合成视频编码
     videoWriter = cv2.VideoWriter(
-        video_path + '/MVI_2653结果.avi', fourcc, 5, (720, 480))
+        video_path + '/厨房测试结果.avi', fourcc, 4, (720, 480))
     # 合成视频名称，编码，FPS，宽高
+    timecount = 0
     for i in range(1, length):
         img1 = cv2.imread(cut_path + str(i) + '.png')
         img2 = cv2.imread(png_out_path + str(i) + '.png')
@@ -91,13 +92,14 @@ def videomake(video_path, cut_path, png_out_path):
         x = models.detect(cut_path + str(i) + '.png')  # YOLO检测人
         person_num = 0  # 单帧出现的人数量
         status[i-1] = 0  # 是否有人的状态，0为没人
+        
 
         for j in range(0, len(x)):  # 统计单帧人数量
             if (x[j][6] == 0):  # 检测目标是否为人
                 person_num += 1
         if (person_num != 0):  # 有人的情况
             status[i-1] = 1
-            time = 0
+            timecount = 0
             print('People')
             cv2.putText(img_mix, 'Person!', (100, 100),
                         cv2.FONT_HERSHEY_COMPLEX, 2.0, (100, 200, 200), 5)
@@ -105,8 +107,8 @@ def videomake(video_path, cut_path, png_out_path):
             print('Nobody')
             cv2.putText(img_mix, 'No one!', (100, 100),
                         cv2.FONT_HERSHEY_COMPLEX, 2.0, (100, 200, 200), 5)
-            time += 1
-            if (time > 25):  # 无人多少帧后开始检测
+            timecount += 1
+            if (timecount > 10):  # 无人多少帧后开始检测
                 mp[i-1] = sum(sum(mask == 0))  # 计算图像中运动的像素点数量
                 print(mp[i-1])
                 count = 0
@@ -146,13 +148,13 @@ if __name__ == '__main__':
     # os.mkdir(flo_path)
     # shutil.rmtree(png_out_path)
     # os.mkdir(png_out_path)
-    # # 代码运行开始
+    # 代码运行开始
     # videocut(video_path, cut_path)
     length = len(os.listdir(cut_path))
     mp = [0]*length
     status = [0]*length
     # flocalc()
-    flo2png()
+    # flo2png()
     videomake(video_path, cut_path, png_out_path)
     # time_end = time.time()
     # print('Time cost:', time_end-time_start)
