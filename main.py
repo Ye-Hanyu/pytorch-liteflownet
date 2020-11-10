@@ -23,13 +23,13 @@ def videocut(video_path, cut_path):
     success, image = vidcap.read()
     count = 0
     num = 0
-    timeF = 6  # 截取间隔
+    timeF = 24  # 截取间隔
     # success = True
     while success:
         success, image = vidcap.read()
         if(count % timeF == 0):
             if image is not None:  # 跳过某些视频最后一帧读取错误
-                image = cv2.resize(image, (720, 480), interpolation=cv2.INTER_AREA)
+                image = cv2.resize(image, (640, 480), interpolation=cv2.INTER_AREA)
                 # image = image[140:680, 200:1160]  # 需要保留的区域--裁剪
                 # 参数1 是高度的范围，参数2是宽度的范围
                 cv2.imwrite(cut_path + "/%d.png" %
@@ -76,7 +76,7 @@ def flo2png():
 def videomake(video_path, cut_path, png_out_path):
     fourcc = cv2.VideoWriter_fourcc(*'XVID')  # 合成视频编码
     videoWriter = cv2.VideoWriter(
-        video_path + '/厨房测试结果.avi', fourcc, 4, (720, 480))
+        video_path + '/厨房测试结果2.avi', fourcc, 1, (640, 480))
     # 合成视频名称，编码，FPS，宽高
     timecount = 0
     for i in range(1, length):
@@ -141,21 +141,21 @@ def videomake(video_path, cut_path, png_out_path):
 
 if __name__ == '__main__':
     # 清空文件夹
-    # time_start = time.time()
-    # shutil.rmtree(cut_path)
-    # os.mkdir(cut_path)
-    # shutil.rmtree(flo_path)
-    # os.mkdir(flo_path)
-    # shutil.rmtree(png_out_path)
-    # os.mkdir(png_out_path)
+    time_start = time.time()
+    shutil.rmtree(cut_path)
+    os.mkdir(cut_path)
+    shutil.rmtree(flo_path)
+    os.mkdir(flo_path)
+    shutil.rmtree(png_out_path)
+    os.mkdir(png_out_path)
     # 代码运行开始
-    # videocut(video_path, cut_path)
+    videocut(video_path, cut_path)
     length = len(os.listdir(cut_path))
     mp = [0]*length
     status = [0]*length
-    # flocalc()
-    # flo2png()
+    flocalc()
+    flo2png()
     videomake(video_path, cut_path, png_out_path)
-    # time_end = time.time()
-    # print('Time cost:', time_end-time_start)
+    time_end = time.time()
+    print('Time cost:', time_end-time_start)
 # end
