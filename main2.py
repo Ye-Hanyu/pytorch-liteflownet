@@ -17,7 +17,7 @@ mpthreshold = 10000  # 运动像素点阈值
 
 
 def videocap():
-    cap = cv2.VideoCapture("rtsp://admin:zhangxuexiang714@192.168.1.67/")
+    cap = cv2.VideoCapture("rtsp://admin:zhangxuexiang714@192.168.1.64/")
     ret, img = cap.read()
     img = cv2.resize(img, (width, height), interpolation=cv2.INTER_AREA)
     # img = img[250:730, 600:1320]  # 需要保留的区域--裁剪
@@ -159,11 +159,11 @@ if __name__ == '__main__':
     count = 0
     scount = 0
     # dmesg | grep tty 查看端口
-    ser = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.5)
-    print(ser)
-    ser.close()
-    ser.open()
-    print(ser.isOpen())
+    # ser = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.5)
+    # print(ser)
+    # ser.close()
+    # ser.open()
+    # print(ser.isOpen())
     while True:
         time_start = time.time()
         imgcap1 = videocap()
@@ -174,7 +174,7 @@ if __name__ == '__main__':
         imgpredict = persondetect('./imgcap1.png')
         torch.cuda.empty_cache()
         cv2.imwrite('./imgpredict.png', imgpredict)
-        co = co_detect()
+        # co = co_detect()
         if (status[0] == 0):
             count += 1
         else:
@@ -192,14 +192,14 @@ if __name__ == '__main__':
                 if (mp[0] > mpthreshold):
                     cv2.putText(img_mix, 'Smoke!', (50, 50),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3)
-            cv2.putText(img_mix, 'CO:%5.1f' % co, (50, 450),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3)
+            # cv2.putText(img_mix, 'CO:%5.1f' % co, (50, 450),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3)
             cv2.imshow('1', img_mix)
             cv2.waitKey(20)
 
         else:
-            cv2.putText(imgpredict, 'CO:%5.1f' % co, (50, 450),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3)
+            # cv2.putText(imgpredict, 'CO:%5.1f' % co, (50, 450),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 3)
             cv2.imshow('1', imgpredict)
             cv2.waitKey(20)
         time_end = time.time()
